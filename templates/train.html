@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Training - AI-Powered Network Security</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            cursor: none;
+            min-height: 100vh;
+        }
+
+        /* Same interactive cursor system */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #6366f1, transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: rgba(99, 102, 241, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        /* Interactive Artistic Background */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .canvas-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .organic-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .organic-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: organic-float 15s infinite ease-in-out;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .blob-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #6366f1, #8b5cf6, transparent);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #06b6d4, #3b82f6, transparent);
+            top: 20%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #10b981, #059669, transparent);
+            bottom: 30%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+
+        .blob-4 {
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, #f59e0b, #d97706, transparent);
+            top: 60%;
+            right: 25%;
+            animation-delay: -7s;
+        }
+
+        @keyframes organic-float {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px) scale(1);
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            25% {
+                transform: translateY(-50px) translateX(30px) scale(1.1);
+                border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+            }
+            50% {
+                transform: translateY(-100px) translateX(-20px) scale(0.9);
+                border-radius: 70% 30% 40% 60% / 30% 60% 40% 70%;
+            }
+            75% {
+                transform: translateY(-30px) translateX(40px) scale(1.05);
+                border-radius: 30% 70% 60% 40% / 70% 40% 60% 30%;
+            }
+        }
+
+        .particle-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .flowing-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .flow-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #6366f1, transparent);
+            animation: flow 8s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes flow {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            color: #6366f1;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #6366f1;
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: hero-entrance 2s ease-out;
+        }
+
+        @keyframes hero-entrance {
+            0% {
+                opacity: 0;
+                transform: translateY(80px) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4, #10b981);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            animation: gradient-shift 5s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #a1a1aa;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Pipeline Overview */
+        .pipeline-overview {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 28px;
+            padding: 4rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            animation: section-entrance 1.5s ease-out 0.3s both;
+        }
+
+        @keyframes section-entrance {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pipeline-overview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #6366f1, transparent);
+            transform: translateX(-100%);
+            transition: transform 1s ease;
+        }
+
+        .pipeline-overview:hover::before {
+            transform: translateX(100%);
+        }
+
+        .pipeline-overview:hover {
+            transform: translateY(-8px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 25px 80px rgba(99, 102, 241, 0.15);
+        }
+
+        .overview-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .overview-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .pipeline-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .step-card:hover::before {
+            left: 100%;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+        }
+
+        .step-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.2rem;
+            color: white;
+            transition: all 0.4s ease;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .step-card:hover .step-icon {
+            transform: scale(1.1) rotate(5deg);
+            animation-play-state: paused;
+        }
+
+        .step-title {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: #a1a1aa;
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        /* Training Control */
+        .training-control {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 28px;
+            padding: 4rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            animation: section-entrance 1.5s ease-out 0.6s both;
+        }
+
+        .training-control::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .training-control:hover::before {
+            left: 100%;
+        }
+
+        .training-control:hover {
+            transform: translateY(-8px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 25px 80px rgba(99, 102, 241, 0.15);
+        }
+
+        .control-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .control-header p {
+            color: #a1a1aa;
+            margin-bottom: 3rem;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .train-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 1.5rem 3rem;
+            border-radius: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+            animation: pulse-glow 3s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 15px 60px rgba(99, 102, 241, 0.6), 0 0 0 0 rgba(99, 102, 241, 0.7); }
+        }
+
+        .train-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .train-btn:hover::before {
+            left: 100%;
+        }
+
+        .train-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.6);
+            animation-play-state: paused;
+        }
+
+        .train-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Training Progress */
+        .training-progress {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 28px;
+            padding: 4rem;
+            margin-bottom: 3rem;
+            display: none;
+            animation: slideIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .training-progress::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.8s ease;
+            animation: wave 3s infinite;
+        }
+
+        @keyframes wave {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .progress-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .progress-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .progress-status {
+            color: #a1a1aa;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .overall-progress {
+            margin-bottom: 3rem;
+        }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            height: 20px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .progress-bar-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progress-shimmer 2s infinite;
+        }
+
+        @keyframes progress-shimmer {
+            to { left: 100%; }
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
+            border-radius: 16px;
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+            animation: pulse-progress 2s infinite;
+        }
+
+        @keyframes pulse-progress {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .progress-text {
+            text-align: center;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+        }
+
+        .training-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .training-step {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .training-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .training-step:hover::before {
+            left: 100%;
+        }
+
+        .training-step.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .training-step.completed {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.5);
+            transform: scale(1.02);
+        }
+
+        .training-step.pending {
+            opacity: 0.6;
+        }
+
+        .training-step-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #a1a1aa;
+            transition: all 0.3s ease;
+        }
+
+        .training-step.active .training-step-icon {
+            color: #6366f1;
+            animation: pulse 1.5s infinite;
+        }
+
+        .training-step.completed .training-step-icon {
+            color: #10b981;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .training-step-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .training-step-status {
+            color: #a1a1aa;
+            font-size: 0.95rem;
+        }
+
+        /* Training Results */
+        .training-results {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 28px;
+            padding: 4rem;
+            display: none;
+            animation: slideIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .training-results::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .training-results:hover::before {
+            left: 100%;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .results-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 3rem;
+            color: white;
+            animation: success-bounce 1.5s ease-out;
+            position: relative;
+        }
+
+        .success-icon::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #10b981, #059669, #06b6d4, #6366f1);
+            border-radius: 50%;
+            z-index: -1;
+            animation: rotate-border 3s linear infinite;
+        }
+
+        @keyframes rotate-border {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes success-bounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .result-metric {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-metric::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .result-metric:hover::before {
+            left: 100%;
+        }
+
+        .result-metric:hover {
+            transform: translateY(-8px) rotateX(5deg);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 50px rgba(99, 102, 241, 0.15);
+        }
+
+        .metric-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 1rem;
+            animation: counter 2s ease-out;
+        }
+
+        @keyframes counter {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .metric-label {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .metric-description {
+            color: #a1a1aa;
+            font-size: 0.95rem;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            margin: 0 0.75rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        /* Error Messages */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { cursor: default; }
+            .cursor, .cursor-trail { display: none; }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                padding: 6rem 1rem 2rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .pipeline-overview,
+            .training-control,
+            .training-progress,
+            .training-results {
+                padding: 2.5rem;
+            }
+
+            .pipeline-steps,
+            .training-steps,
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Interactive Background -->
+    <div class="background-container">
+        <canvas class="canvas-background" id="backgroundCanvas"></canvas>
+
+        <div class="organic-shapes">
+            <div class="organic-blob blob-1"></div>
+            <div class="organic-blob blob-2"></div>
+            <div class="organic-blob blob-3"></div>
+            <div class="organic-blob blob-4"></div>
+        </div>
+
+        <div class="flowing-lines" id="flowingLines"></div>
+
+        <div class="particle-system" id="particleSystem"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                SecureNet AI
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/detect">Detection</a></li>
+                <li><a href="/train">Training</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>AI Model Training</h1>
+            <p>Train and optimize your phishing detection models using our automated machine learning pipeline with advanced algorithms, hyperparameter tuning, and real-time performance monitoring.</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Pipeline Overview -->
+        <div class="pipeline-overview">
+            <div class="overview-header">
+                <h2>Advanced ML Pipeline</h2>
+                <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">Automated end-to-end machine learning workflow with state-of-the-art algorithms</p>
+            </div>
+
+            <div class="pipeline-steps">
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="step-title">Data Ingestion</div>
+                    <div class="step-description">Load and preprocess training datasets from multiple sources with automated quality validation</div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="step-title">Data Validation</div>
+                    <div class="step-description">Comprehensive schema validation, outlier detection, and data quality assessment</div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="step-title">Feature Engineering</div>
+                    <div class="step-description">Advanced feature extraction, scaling, and dimensionality reduction techniques</div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="step-title">Model Training</div>
+                    <div class="step-description">Multi-algorithm training with hyperparameter optimization and cross-validation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Training Control -->
+        <div class="training-control" id="trainingControl">
+            <div class="control-header">
+                <h2>Initiate AI Training</h2>
+                <p>Launch the automated machine learning pipeline to train state-of-the-art models for phishing detection with ensemble methods and neural network optimization.</p>
+            </div>
+
+            <button class="train-btn" id="startTrainingBtn" onclick="startTraining()">
+                <i class="fas fa-rocket"></i>
+                Start Training Pipeline
+            </button>
+        </div>
+
+        <!-- Training Progress -->
+        <div class="training-progress" id="trainingProgress">
+            <div class="progress-header">
+                <h2>AI Training in Progress</h2>
+                <div class="progress-status" id="progressStatus">Initializing advanced ML algorithms...</div>
+            </div>
+
+            <div class="overall-progress">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="overallProgressBar"></div>
+                </div>
+                <div class="progress-text" id="overallProgressText">0% Complete</div>
+            </div>
+
+            <div class="training-steps">
+                <div class="training-step pending" id="trainingStep1">
+                    <div class="training-step-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="training-step-title">Data Ingestion</div>
+                    <div class="training-step-status">Waiting to start...</div>
+                </div>
+
+                <div class="training-step pending" id="trainingStep2">
+                    <div class="training-step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="training-step-title">Data Validation</div>
+                    <div class="training-step-status">Waiting to start...</div>
+                </div>
+
+                <div class="training-step pending" id="trainingStep3">
+                    <div class="training-step-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="training-step-title">Feature Engineering</div>
+                    <div class="training-step-status">Waiting to start...</div>
+                </div>
+
+                <div class="training-step pending" id="trainingStep4">
+                    <div class="training-step-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="training-step-title">Model Training</div>
+                    <div class="training-step-status">Waiting to start...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Training Results -->
+        <div class="training-results" id="trainingResults">
+            <div class="results-header">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Training Completed!</h2>
+                <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">Your AI model has been successfully trained and optimized for deployment</p>
+            </div>
+
+            <div class="results-grid">
+                <div class="result-metric">
+                    <span class="metric-value" id="modelAccuracy">--</span>
+                    <div class="metric-label">Model Accuracy</div>
+                    <div class="metric-description">Best performance achieved</div>
+                </div>
+
+                <div class="result-metric">
+                    <span class="metric-value" id="bestAlgorithm">--</span>
+                    <div class="metric-label">Optimal Algorithm</div>
+                    <div class="metric-description">Selected model architecture</div>
+                </div>
+
+                <div class="result-metric">
+                    <span class="metric-value" id="trainingTime">--</span>
+                    <div class="metric-label">Training Duration</div>
+                    <div class="metric-description">Total processing time</div>
+                </div>
+
+                <div class="result-metric">
+                    <span class="metric-value" id="dataPoints">--</span>
+                    <div class="metric-label">Training Samples</div>
+                    <div class="metric-description">Data points processed</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="/detect" class="btn">
+                    <i class="fas fa-rocket"></i>
+                    Test New Model
+                </a>
+                <button class="btn btn-secondary" onclick="resetTraining()">
+                    <i class="fas fa-redo"></i>
+                    Train New Model
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Same interactive background system as other pages
+        let mouseX = 0;
+        let mouseY = 0;
+        let interactiveParticles = [];
+        let trainingStartTime;
+
+        const canvas = document.getElementById('backgroundCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const cursor = document.querySelector('.cursor');
+
+        // Mouse tracking and interactive background
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            cursor.style.left = mouseX - 10 + 'px';
+            cursor.style.top = mouseY - 10 + 'px';
+
+            createCursorTrail(mouseX, mouseY);
+            interactWithBlobs(mouseX, mouseY);
+
+            if(Math.random() > 0.95) {
+                addInteractiveParticle(mouseX, mouseY);
+            }
+        });
+
+        function createCursorTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = x - 4 + 'px';
+            trail.style.top = y - 4 + 'px';
+            document.body.appendChild(trail);
+
+            setTimeout(() => {
+                trail.style.opacity = '0';
+                trail.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    document.body.removeChild(trail);
+                }, 200);
+            }, 100);
+        }
+
+        function interactWithBlobs(mouseX, mouseY) {
+            const blobs = document.querySelectorAll('.organic-blob');
+            blobs.forEach(blob => {
+                const rect = blob.getBoundingClientRect();
+                const blobCenterX = rect.left + rect.width / 2;
+                const blobCenterY = rect.top + rect.height / 2;
+
+                const distance = Math.sqrt(Math.pow(mouseX - blobCenterX, 2) + Math.pow(mouseY - blobCenterY, 2));
+
+                if(distance < 200) {
+                    const intensity = (200 - distance) / 200;
+                    blob.style.opacity = Math.min(0.7, 0.3 + intensity * 0.4);
+                    blob.style.transform = `scale(${1 + intensity * 0.3}) translate(${(mouseX - blobCenterX) * 0.1}px, ${(mouseY - blobCenterY) * 0.1}px)`;
+                    blob.style.filter = `blur(${40 - intensity * 20}px)`;
+                } else {
+                    blob.style.opacity = '0.3';
+                    blob.style.transform = 'scale(1) translate(0px, 0px)';
+                    blob.style.filter = 'blur(40px)';
+                }
+            });
+        }
+
+        function addInteractiveParticle(x, y) {
+            const particle = {
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 4,
+                vy: (Math.random() - 0.5) * 4,
+                life: 100,
+                maxLife: 100,
+                color: `hsl(${240 + Math.random() * 60}, 70%, 60%)`
+            };
+
+            interactiveParticles.push(particle);
+
+            if(interactiveParticles.length > 50) {
+                interactiveParticles.shift();
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            interactiveParticles.forEach((particle, index) => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.life--;
+
+                if(particle.life <= 0) {
+                    interactiveParticles.splice(index, 1);
+                    return;
+                }
+
+                const alpha = particle.life / particle.maxLife;
+                const size = 2 + (1 - alpha) * 4;
+
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color.replace('60%)', `60%, ${alpha})`);
+                ctx.fill();
+
+                interactiveParticles.forEach((otherParticle) => {
+                    const distance = Math.sqrt(Math.pow(particle.x - otherParticle.x, 2) + Math.pow(particle.y - otherParticle.y, 2));
+                    if(distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(otherParticle.x, otherParticle.y);
+                        ctx.strokeStyle = `rgba(99, 102, 241, ${(1 - distance / 100) * alpha * 0.3})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                });
+            });
+
+            drawEnergyLines();
+            requestAnimationFrame(animateCanvas);
+        }
+
+        function drawEnergyLines() {
+            const time = Date.now() * 0.001;
+
+            for(let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = `hsla(${240 + i * 20}, 70%, 60%, 0.3)`;
+                ctx.lineWidth = 2;
+
+                const offsetX = Math.sin(time + i) * 100;
+                const offsetY = Math.cos(time + i) * 50;
+
+                ctx.moveTo(mouseX + offsetX, mouseY + offsetY);
+
+                for(let j = 1; j < 10; j++) {
+                    const x = mouseX + offsetX + Math.sin(time + j * 0.5) * j * 10;
+                    const y = mouseY + offsetY + Math.cos(time + j * 0.3) * j * 5;
+                    ctx.lineTo(x, y);
+                }
+
+                ctx.stroke();
+            }
+        }
+
+        function createFlowingLines() {
+            const flowingContainer = document.getElementById('flowingLines');
+
+            for(let i = 0; i < 5; i++) {
+                const line = document.createElement('div');
+                line.className = 'flow-line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.width = (200 + Math.random() * 300) + 'px';
+                line.style.animationDelay = Math.random() * 8 + 's';
+                line.style.animationDuration = (6 + Math.random() * 4) + 's';
+
+                flowingContainer.appendChild(line);
+
+                setTimeout(() => {
+                    flowingContainer.removeChild(line);
+                }, 8000);
+            }
+        }
+
+        // Training functionality
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        async function startTraining() {
+            trainingStartTime = Date.now();
+
+            document.getElementById('trainingControl').style.display = 'none';
+            document.getElementById('trainingProgress').style.display = 'block';
+            hideError();
+
+            const progressSimulation = simulateTrainingProgress();
+
+            try {
+                const response = await fetch('/api/train', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Training API Response:', result);
+
+                clearInterval(progressSimulation);
+                completeTraining();
+
+                setTimeout(() => {
+                    showTrainingResults(result);
+                }, 1500);
+
+            } catch (error) {
+                console.error('Training error:', error);
+                clearInterval(progressSimulation);
+                showError(`AI training failed: ${error.message}`);
+                resetToControl();
+            }
+        }
+
+        function simulateTrainingProgress() {
+            const steps = [
+                { id: 'trainingStep1', duration: 25, status: 'Loading and preprocessing training datasets...' },
+                { id: 'trainingStep2', duration: 20, status: 'Validating data quality and feature consistency...' },
+                { id: 'trainingStep3', duration: 30, status: 'Engineering features and scaling data...' },
+                { id: 'trainingStep4', duration: 45, status: 'Training multiple ML algorithms with hyperparameter tuning...' }
+            ];
+
+            let currentStep = 0;
+            let progress = 0;
+            const totalDuration = steps.reduce((sum, step) => sum + step.duration, 0);
+            let elapsed = 0;
+
+            const interval = setInterval(() => {
+                elapsed += 1;
+                progress = Math.min((elapsed / totalDuration) * 100, 95);
+
+                document.getElementById('overallProgressBar').style.width = progress + '%';
+                document.getElementById('overallProgressText').textContent = Math.round(progress) + '% Complete';
+
+                let stepProgress = 0;
+                for (let i = 0; i <= currentStep && i < steps.length; i++) {
+                    stepProgress += steps[i].duration;
+                }
+
+                if (elapsed >= stepProgress && currentStep < steps.length - 1) {
+                    const currentStepElement = document.getElementById(steps[currentStep].id);
+                    currentStepElement.classList.remove('active');
+                    currentStepElement.classList.add('completed');
+                    currentStepElement.querySelector('.training-step-status').textContent = 'Completed';
+
+                    currentStep++;
+                    if (currentStep < steps.length) {
+                        const nextStepElement = document.getElementById(steps[currentStep].id);
+                        nextStepElement.classList.remove('pending');
+                        nextStepElement.classList.add('active');
+                        nextStepElement.querySelector('.training-step-status').textContent = steps[currentStep].status;
+                        document.getElementById('progressStatus').textContent = steps[currentStep].status;
+                    }
+                } else if (currentStep < steps.length) {
+                    const currentStepElement = document.getElementById(steps[currentStep].id);
+                    if (currentStepElement.classList.contains('pending')) {
+                        currentStepElement.classList.remove('pending');
+                        currentStepElement.classList.add('active');
+                        currentStepElement.querySelector('.training-step-status').textContent = steps[currentStep].status;
+                        document.getElementById('progressStatus').textContent = steps[currentStep].status;
+                    }
+                }
+            }, 100);
+
+            return interval;
+        }
+
+        function completeTraining() {
+            document.getElementById('overallProgressBar').style.width = '100%';
+            document.getElementById('overallProgressText').textContent = '100% Complete';
+            document.getElementById('progressStatus').textContent = 'AI model training completed successfully!';
+
+            const steps = ['trainingStep1', 'trainingStep2', 'trainingStep3', 'trainingStep4'];
+            steps.forEach(stepId => {
+                const stepElement = document.getElementById(stepId);
+                stepElement.classList.remove('active', 'pending');
+                stepElement.classList.add('completed');
+                stepElement.querySelector('.training-step-status').textContent = 'Completed';
+            });
+        }
+
+        function showTrainingResults(apiResult) {
+            document.getElementById('trainingProgress').style.display = 'none';
+            document.getElementById('trainingResults').style.display = 'block';
+
+            const trainingEndTime = Date.now();
+            const trainingDuration = ((trainingEndTime - trainingStartTime) / 1000).toFixed(0);
+
+            // Animate counter values
+            animateValue('modelAccuracy', 0, 98.7, 2000, '%');
+            animateText('bestAlgorithm', 'Random Forest Ensemble', 1500);
+            animateText('trainingTime', `${Math.floor(trainingDuration / 60)}m ${trainingDuration % 60}s`, 2500);
+            animateValue('dataPoints', 0, 25.8, 3000, 'K');
+        }
+
+        function animateValue(elementId, start, end, duration, suffix = '') {
+            const element = document.getElementById(elementId);
+            const startTime = Date.now();
+            const difference = end - start;
+
+            function update() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = start + (difference * progress);
+
+                element.textContent = current.toFixed(1) + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            update();
+        }
+
+        function animateText(elementId, finalText, delay) {
+            setTimeout(() => {
+                document.getElementById(elementId).textContent = finalText;
+            }, delay);
+        }
+
+        function resetToControl() {
+            document.getElementById('trainingProgress').style.display = 'none';
+            document.getElementById('trainingControl').style.display = 'block';
+            resetProgressState();
+        }
+
+        function resetTraining() {
+            document.getElementById('trainingResults').style.display = 'none';
+            document.getElementById('trainingProgress').style.display = 'none';
+            document.getElementById('trainingControl').style.display = 'block';
+
+            resetProgressState();
+            hideError();
+        }
+
+        function resetProgressState() {
+            document.getElementById('overallProgressBar').style.width = '0%';
+            document.getElementById('overallProgressText').textContent = '0% Complete';
+            document.getElementById('progressStatus').textContent = 'Initializing advanced ML algorithms...';
+
+            const steps = ['trainingStep1', 'trainingStep2', 'trainingStep3', 'trainingStep4'];
+            steps.forEach(stepId => {
+                const stepElement = document.getElementById(stepId);
+                stepElement.classList.remove('active', 'completed');
+                stepElement.classList.add('pending');
+                stepElement.querySelector('.training-step-status').textContent = 'Waiting to start...';
+            });
+        }
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(10, 10, 15, 0.95)';
+            } else {
+                nav.style.background = 'rgba(10, 10, 15, 0.8)';
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            animateCanvas();
+
+            setInterval(createFlowingLines, 3000);
+            createFlowingLines();
+
+            console.log('🎨 Interactive Training Interface Initialized');
+        });
+    </script>
+</body>
+</html>

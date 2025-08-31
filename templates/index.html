@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Security - AI-Powered Phishing Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #6366f1, transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: rgba(99, 102, 241, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        /* Interactive Artistic Background */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .canvas-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Organic Flowing Shapes */
+        .organic-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .organic-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: organic-float 15s infinite ease-in-out;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .blob-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #6366f1, #8b5cf6, transparent);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #06b6d4, #3b82f6, transparent);
+            top: 20%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #10b981, #059669, transparent);
+            bottom: 30%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+
+        .blob-4 {
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, #f59e0b, #d97706, transparent);
+            top: 60%;
+            right: 25%;
+            animation-delay: -7s;
+        }
+
+        @keyframes organic-float {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px) scale(1);
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            25% {
+                transform: translateY(-50px) translateX(30px) scale(1.1);
+                border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+            }
+            50% {
+                transform: translateY(-100px) translateX(-20px) scale(0.9);
+                border-radius: 70% 30% 40% 60% / 30% 60% 40% 70%;
+            }
+            75% {
+                transform: translateY(-30px) translateX(40px) scale(1.05);
+                border-radius: 30% 70% 60% 40% / 70% 40% 60% 30%;
+            }
+        }
+
+        /* Interactive Particle System */
+        .particle-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .interactive-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #6366f1;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: all 0.2s ease;
+        }
+
+        /* Flowing Lines */
+        .flowing-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .flow-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #6366f1, transparent);
+            animation: flow 8s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes flow {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            color: #6366f1;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #6366f1;
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            animation: hero-entrance 2s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes hero-entrance {
+            0% {
+                opacity: 0;
+                transform: translateY(80px) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 800;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4, #10b981);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            position: relative;
+            animation: gradient-shift 5s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: #a1a1aa;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            animation: text-reveal 1.5s ease-out 0.5s both;
+        }
+
+        @keyframes text-reveal {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: buttons-reveal 1.5s ease-out 1s both;
+        }
+
+        @keyframes buttons-reveal {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 60px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(99, 102, 241, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-5px) scale(1.05);
+            border-color: rgba(99, 102, 241, 0.8);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 10rem 2rem;
+            position: relative;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #a1a1aa;
+            margin-bottom: 5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #6366f1, transparent);
+            transform: translateX(-100%);
+            transition: transform 1s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 25px 80px rgba(99, 102, 241, 0.2);
+        }
+
+        .feature-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.2rem;
+            color: white;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.8s ease;
+            opacity: 0;
+        }
+
+        .feature-card:hover .feature-icon::before {
+            opacity: 1;
+            animation: shine 0.8s ease;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1.2rem;
+        }
+
+        .feature-card p {
+            color: #a1a1aa;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 8rem 2rem;
+            background: rgba(99, 102, 241, 0.05);
+            position: relative;
+        }
+
+        .stats-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            position: relative;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 50px rgba(99, 102, 241, 0.1);
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: #a1a1aa;
+            font-weight: 500;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { cursor: default; }
+            .cursor, .cursor-trail { display: none; }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 0 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                padding: 2rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* Scroll Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s ease;
+        }
+
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Interactive Artistic Background -->
+    <div class="background-container">
+        <canvas class="canvas-background" id="backgroundCanvas"></canvas>
+
+        <div class="organic-shapes">
+            <div class="organic-blob blob-1"></div>
+            <div class="organic-blob blob-2"></div>
+            <div class="organic-blob blob-3"></div>
+            <div class="organic-blob blob-4"></div>
+        </div>
+
+        <div class="flowing-lines" id="flowingLines"></div>
+
+        <div class="particle-system" id="particleSystem"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                SecureNet AI
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/detect">Detection</a></li>
+                <li><a href="/train">Training</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>AI-Powered Phishing Detection</h1>
+            <p>Revolutionary cybersecurity platform utilizing cutting-edge artificial intelligence and machine learning algorithms to protect your organization from sophisticated phishing attacks with unprecedented accuracy and real-time threat detection.</p>
+            <div class="cta-buttons">
+                <a href="/detect" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    Start Detection
+                </a>
+                <a href="/train" class="btn btn-secondary">
+                    <i class="fas fa-brain"></i>
+                    Train Models
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <h2 class="section-title animate-on-scroll">Advanced AI Capabilities</h2>
+            <p class="section-subtitle animate-on-scroll">Next-generation machine learning technology engineered for enterprise-grade cybersecurity</p>
+
+            <div class="features-grid">
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Deep Learning Engine</h3>
+                    <p>Advanced neural networks with ensemble methods combining Random Forest, Gradient Boosting, and Transformer architectures for superior threat detection accuracy.</p>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Real-time Analysis</h3>
+                    <p>Lightning-fast threat detection with sub-millisecond response times and continuous monitoring capabilities powered by optimized inference pipelines.</p>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <h3>Adaptive Security</h3>
+                    <p>Self-evolving AI system that continuously learns from new threats and adapts to emerging attack patterns through automated model retraining.</p>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Intelligence Dashboard</h3>
+                    <p>Comprehensive threat intelligence with advanced analytics, interactive visualizations, and detailed security reports with actionable insights.</p>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>Cloud-Native Architecture</h3>
+                    <p>Horizontally scalable infrastructure with Kubernetes orchestration, Docker containerization, and multi-cloud deployment capabilities.</p>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>MLOps Pipeline</h3>
+                    <p>Automated model lifecycle management with MLflow integration, continuous integration/deployment, and comprehensive experiment tracking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item animate-on-scroll">
+                <span class="stat-number">99.9%</span>
+                <span class="stat-label">Detection Accuracy</span>
+            </div>
+            <div class="stat-item animate-on-scroll">
+                <span class="stat-number">&lt;100ms</span>
+                <span class="stat-label">Response Time</span>
+            </div>
+            <div class="stat-item animate-on-scroll">
+                <span class="stat-number">100+</span>
+                <span class="stat-label">Feature Vectors</span>
+            </div>
+            <div class="stat-item animate-on-scroll">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">AI Monitoring</span>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Mouse tracking variables
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorTrails = [];
+
+        // Interactive particles array
+        let interactiveParticles = [];
+
+        // Canvas setup
+        const canvas = document.getElementById('backgroundCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+
+        // Mouse movement tracking
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Update cursor position
+            cursor.style.left = mouseX - 10 + 'px';
+            cursor.style.top = mouseY - 10 + 'px';
+
+            // Create cursor trail
+            createCursorTrail(mouseX, mouseY);
+
+            // Interact with organic blobs
+            interactWithBlobs(mouseX, mouseY);
+
+            // Add interactive particles
+            if(Math.random() > 0.95) {
+                addInteractiveParticle(mouseX, mouseY);
+            }
+        });
+
+        // Cursor trail system
+        function createCursorTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = x - 4 + 'px';
+            trail.style.top = y - 4 + 'px';
+            document.body.appendChild(trail);
+
+            // Remove trail after animation
+            setTimeout(() => {
+                trail.style.opacity = '0';
+                trail.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    document.body.removeChild(trail);
+                }, 200);
+            }, 100);
+        }
+
+        // Interactive blob system
+        function interactWithBlobs(mouseX, mouseY) {
+            const blobs = document.querySelectorAll('.organic-blob');
+            blobs.forEach(blob => {
+                const rect = blob.getBoundingClientRect();
+                const blobCenterX = rect.left + rect.width / 2;
+                const blobCenterY = rect.top + rect.height / 2;
+
+                const distance = Math.sqrt(Math.pow(mouseX - blobCenterX, 2) + Math.pow(mouseY - blobCenterY, 2));
+
+                if(distance < 200) {
+                    const intensity = (200 - distance) / 200;
+                    blob.style.opacity = Math.min(0.7, 0.3 + intensity * 0.4);
+                    blob.style.transform = `scale(${1 + intensity * 0.3}) translate(${(mouseX - blobCenterX) * 0.1}px, ${(mouseY - blobCenterY) * 0.1}px)`;
+                    blob.style.filter = `blur(${40 - intensity * 20}px)`;
+                } else {
+                    blob.style.opacity = '0.3';
+                    blob.style.transform = 'scale(1) translate(0px, 0px)';
+                    blob.style.filter = 'blur(40px)';
+                }
+            });
+        }
+
+        // Interactive particle system
+        function addInteractiveParticle(x, y) {
+            const particle = {
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 4,
+                vy: (Math.random() - 0.5) * 4,
+                life: 100,
+                maxLife: 100,
+                color: `hsl(${240 + Math.random() * 60}, 70%, 60%)`
+            };
+
+            interactiveParticles.push(particle);
+
+            // Limit particle count
+            if(interactiveParticles.length > 50) {
+                interactiveParticles.shift();
+            }
+        }
+
+        // Canvas animation
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw interactive particles
+            interactiveParticles.forEach((particle, index) => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.life--;
+
+                if(particle.life <= 0) {
+                    interactiveParticles.splice(index, 1);
+                    return;
+                }
+
+                const alpha = particle.life / particle.maxLife;
+                const size = 2 + (1 - alpha) * 4;
+
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color.replace('60%)', `60%, ${alpha})`);
+                ctx.fill();
+
+                // Connect nearby particles
+                interactiveParticles.forEach((otherParticle) => {
+                    const distance = Math.sqrt(Math.pow(particle.x - otherParticle.x, 2) + Math.pow(particle.y - otherParticle.y, 2));
+                    if(distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(otherParticle.x, otherParticle.y);
+                        ctx.strokeStyle = `rgba(99, 102, 241, ${(1 - distance / 100) * alpha * 0.3})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                });
+            });
+
+            // Draw flowing energy lines
+            drawEnergyLines();
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        // Energy lines following mouse
+        function drawEnergyLines() {
+            const time = Date.now() * 0.001;
+
+            for(let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = `hsla(${240 + i * 20}, 70%, 60%, 0.3)`;
+                ctx.lineWidth = 2;
+
+                const offsetX = Math.sin(time + i) * 100;
+                const offsetY = Math.cos(time + i) * 50;
+
+                ctx.moveTo(mouseX + offsetX, mouseY + offsetY);
+
+                for(let j = 1; j < 10; j++) {
+                    const x = mouseX + offsetX + Math.sin(time + j * 0.5) * j * 10;
+                    const y = mouseY + offsetY + Math.cos(time + j * 0.3) * j * 5;
+                    ctx.lineTo(x, y);
+                }
+
+                ctx.stroke();
+            }
+        }
+
+        // Create flowing lines
+        function createFlowingLines() {
+            const flowingContainer = document.getElementById('flowingLines');
+
+            for(let i = 0; i < 5; i++) {
+                const line = document.createElement('div');
+                line.className = 'flow-line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.width = (200 + Math.random() * 300) + 'px';
+                line.style.animationDelay = Math.random() * 8 + 's';
+                line.style.animationDuration = (6 + Math.random() * 4) + 's';
+
+                flowingContainer.appendChild(line);
+
+                // Remove and recreate line after animation
+                setTimeout(() => {
+                    flowingContainer.removeChild(line);
+                }, 8000);
+            }
+        }
+
+        // API Health Check
+        async function checkApiHealth() {
+            try {
+                const response = await fetch('/health');
+                if (response.ok) {
+                    console.log('🟢 API is healthy and responsive');
+                }
+            } catch (error) {
+                console.log('🔴 API health check failed:', error);
+            }
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(10, 10, 15, 0.95)';
+            } else {
+                nav.style.background = 'rgba(10, 10, 15, 0.8)';
+            }
+        });
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            checkApiHealth();
+            animateCanvas();
+
+            // Create flowing lines periodically
+            setInterval(createFlowingLines, 3000);
+            createFlowingLines();
+
+            // Observe all animated elements
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+
+            console.log('🚀 Interactive AI Interface Initialized');
+        });
+    </script>
+</body>
+</html>
